@@ -87,7 +87,17 @@ README.md        Project documentation
 
 ## Production Note
 
-The current version is a front-end demo using browser `localStorage`. It is suitable for local demonstrations and a single browser profile. For production use across customers, sellers, and devices, connect the shared collections to Supabase with authentication, PostgreSQL tables, Row Level Security, Storage, and Realtime subscriptions.
+The project now includes Supabase connectivity through `supabase.js` and `supabase-config.js`. Run [`supabase-schema.sql`](supabase-schema.sql) once in the Supabase SQL Editor to create the menu, orders, and bookings tables and enable Realtime.
+
+The browser uses the Supabase publishable key only. The app also keeps local storage as a fallback when the schema has not been applied or the network is unavailable. Before accepting real payments or opening seller management publicly, replace the demo policies in `supabase-schema.sql` with Supabase Auth and store-specific Row Level Security policies.
+
+Supabase data flow:
+
+1. Sellers manage `menu_items`.
+2. Customers read available menu items.
+3. Checkout inserts a row into `orders`.
+4. Seller order status changes update the same row.
+5. Supabase Realtime refreshes open customer and seller pages.
 
 ## License
 
