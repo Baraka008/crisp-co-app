@@ -65,6 +65,15 @@ alter table public.orders replica identity full;
 alter table public.bookings replica identity full;
 
 -- Enable realtime for the cross-screen order and menu updates.
-alter publication supabase_realtime add table public.menu_items;
-alter publication supabase_realtime add table public.orders;
-alter publication supabase_realtime add table public.bookings;
+do $$
+begin
+  if not exists (select 1 from pg_publication_rel where pubname = 'supabase_realtime' and prrelid = 'public.menu_items'::regclass) then
+    alter publication supabase_realtime add table public.menu_items;
+  end if;
+  if not exists (select 1 from pg_publication_rel where pubname = 'supabase_realtime' and prrelid = 'public.orders'::regclass) then
+    alter publication supabase_realtime add table public.orders;
+  end if;
+  if not exists (select 1 from pg_publication_rel where pubname = 'supabase_realtime' and prrelid = 'public.bookings'::regclass) then
+    alter publication supabase_realtime add table public.bookings;
+  end if;
+end $$;
