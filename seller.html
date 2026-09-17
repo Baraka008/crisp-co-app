@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crisp & Co. Seller Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="seller.css" />
+</head>
+<body>
+  <aside class="seller-sidebar">
+    <a class="seller-brand" href="seller.html"><span>C</span><strong>CRISP<br><i>& CO.</i></strong></a>
+    <div class="store-status"><span></span><div><strong>Downtown store</strong><small>Open · accepting orders</small></div><button id="statusToggle" title="Toggle store status">⌄</button></div>
+    <nav class="seller-nav" aria-label="Seller navigation">
+      <button class="active" data-view="overview"><span>▦</span> Overview</button>
+      <button data-view="orders"><span>◫</span> Orders <b id="orderNavCount">0</b></button>
+      <button data-view="menu"><span>✦</span> Menu</button>
+      <button data-view="bookings"><span>□</span> Bookings <b id="bookingNavCount">0</b></button>
+      <button data-view="insights"><span>↗</span> Insights</button>
+    </nav>
+    <div class="sidebar-bottom"><button><span>⚙</span> Settings</button><a href="index.html"><span>↩</span> Customer site</a><div class="seller-user"><div class="avatar">JD</div><div><strong>Jordan Davis</strong><small>Store manager</small></div><span>•••</span></div></div>
+  </aside>
+  <main class="seller-main">
+    <header class="seller-header"><div class="mobile-brand"><span>C</span><strong>CRISP & CO.</strong></div><div class="page-title"><p class="breadcrumb">Crisp & Co. / <strong id="viewLabel">Overview</strong></p><h1 id="pageHeading">Good morning, Jordan <span>✦</span></h1><p class="date-line">Tuesday, September 17, 2026 · Downtown store</p></div><div class="header-actions"><button class="icon-button" title="Notifications">♢<b>4</b></button><button class="seller-avatar">JD</button></div></header>
+    <section class="seller-view active" id="overviewView">
+      <div class="view-toolbar"><div><h2>Today at a glance</h2><p>Keep the good stuff moving.</p></div><button class="primary-button" data-open-add><span>＋</span> Add new item</button></div>
+      <div class="stat-grid"><article><div class="stat-icon red">◷</div><span>Today’s sales</span><strong id="salesStat">$0.00</strong><small>Updates after completed orders</small></article><article><div class="stat-icon yellow">◫</div><span>Orders today</span><strong id="ordersStat">0</strong><small>Live customer orders</small></article><article><div class="stat-icon green">★</div><span>Average rating</span><strong>—</strong><small>Reviews appear after service</small></article><article><div class="stat-icon dark">♧</div><span>Open bookings</span><strong id="bookingsStat">0</strong><small>Live booking requests</small></article></div>
+      <div class="dashboard-grid"><section class="panel order-panel"><div class="panel-head"><div><h3>Orders in progress</h3><p>Live kitchen queue</p></div><button class="link-button" data-view-link="orders">View all →</button></div><div id="overviewOrders"></div></section><section class="panel booking-panel"><div class="panel-head"><div><h3>Bookings to confirm</h3><p>Guests waiting for a yes</p></div><button class="link-button" data-view-link="bookings">View all →</button></div><div id="overviewBookings"></div></section></div>
+      <section class="panel bestsellers"><div class="panel-head"><div><h3>Best sellers</h3><p>Item performance will appear after orders.</p></div><button class="link-button" data-view-link="insights">See insights →</button></div><div class="empty-state">Add menu items and complete orders to see performance here.</div></section>
+    </section>
+    <section class="seller-view" id="ordersView"><div class="view-toolbar"><div><h2>Orders</h2><p>Manage every order from accepted to ready.</p></div><div class="date-filter"><button class="active">Today</button><button>Yesterday</button><button>Last 7 days</button></div></div><div class="order-tabs"><button class="active" data-order-filter="all">All <b>0</b></button><button data-order-filter="new">New <b>0</b></button><button data-order-filter="progress">In progress <b>0</b></button><button data-order-filter="ready">Ready <b>0</b></button></div><div class="full-order-list" id="fullOrderList"></div></section>
+    <section class="seller-view" id="menuView"><div class="view-toolbar"><div><h2>Your menu</h2><p>Add items, change availability, and keep prices fresh.</p></div><button class="primary-button" data-open-add><span>＋</span> Add new item</button></div><div class="menu-summary"><span><b id="menuCount">0</b> items live</span><span><i class="live-dot"></i> Menu visible to customers</span><button class="link-button" id="menuVisibility">Hide menu temporarily</button></div><div class="seller-menu-grid" id="sellerMenuGrid"></div></section>
+    <section class="seller-view" id="bookingsView"><div class="view-toolbar"><div><h2>Bookings</h2><p>Confirm tables and keep guests in the loop.</p></div><button class="outline-button" id="newBooking">＋ Add booking</button></div><div class="booking-tabs"><button class="active">Needs confirmation <b>0</b></button><button>Upcoming</button><button>Past bookings</button></div><div class="booking-list" id="bookingList"></div></section>
+    <section class="seller-view" id="insightsView"><div class="view-toolbar"><div><h2>Insights</h2><p>A clearer view of what is moving your store.</p></div><select class="period-select"><option>This week</option><option>Last week</option><option>This month</option></select></div><div class="panel empty-state">Insights will populate after your first live orders.</div></section>
+  </main>
+  <div class="seller-modal" id="addModal"><div class="seller-modal-panel"><button class="modal-close" data-close-add>×</button><p class="eyebrow">Menu management</p><h2>ADD A NEW ITEM</h2><form id="addFoodForm"><label>Item name<input required name="name" placeholder="e.g. Smoky BBQ Wings"></label><div class="form-row"><label>Price<input required name="price" type="number" min="0" step="0.01" placeholder="12.99"></label><label>Category<select name="category"><option value="chicken">Chicken</option><option value="burgers">Burgers</option><option value="sides">Sides</option><option value="sweet">Sweet stuff</option></select></label></div><label>Description<input required name="description" placeholder="Short description for customers"></label><label>Image URL<input name="image" placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=700&q=85"></label><div class="availability-toggle"><span><strong>Available now</strong><small>Customers can order this item</small></span><input type="checkbox" name="available" checked></div><button class="primary-button full" type="submit">Add item to menu <span>→</span></button></form></div></div>
+  <div class="seller-toast" id="sellerToast"><span>✓</span><strong id="sellerToastText">Updated</strong></div>
+  <script src="seller.js"></script>
+</body>
+</html>
