@@ -6,6 +6,8 @@ A polished chicken ordering experience with a customer storefront and a seller o
 
 With the local server running:
 
+- Live customer website: [https://crispandco.netlify.app](https://crispandco.netlify.app)
+- Live seller dashboard: [https://crispandco.netlify.app/seller.html](https://crispandco.netlify.app/seller.html)
 - Customer ordering site: [http://localhost:5500](http://localhost:5500)
 - Seller dashboard: [http://localhost:5500/seller.html](http://localhost:5500/seller.html)
 - GitHub repository: [https://github.com/Baraka008/crisp-co-app](https://github.com/Baraka008/crisp-co-app)
