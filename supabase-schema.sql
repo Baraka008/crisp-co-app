@@ -43,26 +43,74 @@ alter table public.menu_items enable row level security;
 alter table public.orders enable row level security;
 alter table public.bookings enable row level security;
 
--- These policies support the current demo without login. Add Supabase Auth
--- and replace them with user/store policies before accepting real payments.
+-- Seller data is private. Add trusted seller user IDs to this table from the
+-- Supabase SQL editor after creating those users with Supabase Auth.
+create table if not exists public.store_admins (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+alter table public.store_admins enable row level security;
+
+create or replace function public.is_store_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.store_admins where user_id = auth.uid()
+  );
+$$;
+revoke all on function public.is_store_admin() from public;
+grant execute on function public.is_store_admin() to authenticated;
+
 drop policy if exists "Public can read menu" on public.menu_items;
-create policy "Public can read menu" on public.menu_items for select using (true);
 drop policy if exists "Public can manage menu" on public.menu_items;
-create policy "Public can manage menu" on public.menu_items for all using (true) with check (true);
-
 drop policy if exists "Public can create orders" on public.orders;
-create policy "Public can create orders" on public.orders for insert with check (true);
 drop policy if exists "Public can read orders" on public.orders;
-create policy "Public can read orders" on public.orders for select using (true);
 drop policy if exists "Public can update orders" on public.orders;
-create policy "Public can update orders" on public.orders for update using (true) with check (true);
-
 drop policy if exists "Public can manage bookings" on public.bookings;
-create policy "Public can manage bookings" on public.bookings for all using (true) with check (true);
+drop policy if exists "Admins can read own membership" on public.store_admins;
+drop policy if exists "Public menu read" on public.menu_items;
+drop policy if exists "Store admins manage menu" on public.menu_items;
+drop policy if exists "Customers create orders" on public.orders;
+drop policy if exists "Store admins read orders" on public.orders;
+drop policy if exists "Store admins update orders" on public.orders;
+drop policy if exists "Customers create bookings" on public.bookings;
+drop policy if exists "Store admins read bookings" on public.bookings;
+drop policy if exists "Store admins update bookings" on public.bookings;
 
-alter table public.menu_items replica identity full;
-alter table public.orders replica identity full;
-alter table public.bookings replica identity full;
+create policy "Admins can read own membership"
+  on public.store_admins for select to authenticated
+  using (user_id = auth.uid());
+
+create policy "Public menu read"
+  on public.menu_items for select to anon, authenticated
+  using (true);
+create policy "Store admins manage menu"
+  on public.menu_items for all to authenticated
+  using (public.is_store_admin()) with check (public.is_store_admin());
+
+create policy "Customers create orders"
+  on public.orders for insert to anon, authenticated
+  with check (true);
+create policy "Store admins read orders"
+  on public.orders for select to authenticated
+  using (public.is_store_admin());
+create policy "Store admins update orders"
+  on public.orders for update to authenticated
+  using (public.is_store_admin()) with check (public.is_store_admin());
+
+create policy "Customers create bookings"
+  on public.bookings for insert to anon, authenticated
+  with check (true);
+create policy "Store admins read bookings"
+  on public.bookings for select to authenticated
+  using (public.is_store_admin());
+create policy "Store admins update bookings"
+  on public.bookings for update to authenticated
+  using (public.is_store_admin()) with check (public.is_store_admin());
 
 -- Enable realtime for the cross-screen order and menu updates.
 do $$
