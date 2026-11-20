@@ -1,0 +1,19 @@
+name: Crisp & Co. CI
+on:
+  push:
+    branches: [main, chore/repository-audit-and-polish]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check app.js
+      - run: node --check seller.js
+      - run: node --check supabase.js
