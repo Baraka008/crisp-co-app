@@ -104,3 +104,13 @@ Supabase data flow:
 ## License
 
 No license has been added yet. Add one before distributing the project publicly.
+
+
+## Security and checkout status
+
+- The checkout is currently a prototype. It collects delivery details only; it does not collect card numbers or process payments.
+- Demo orders are not real restaurant orders and should not be advertised as confirmed deliveries.
+- The Supabase schema now keeps orders and bookings private to authenticated store administrators. Public visitors can read menu items and submit an order/booking request, but cannot read seller records.
+- Before production, configure Supabase Auth, create the intended seller users, add their UUIDs to `public.store_admins` using the Supabase SQL editor, and wire the seller dashboard to authenticated sessions.
+- Add server-side abuse protection or a trusted order endpoint before accepting public submissions. Never put a Supabase service-role key in browser code.
+- Do not accept live payments until a real hosted payment provider is integrated and tested end-to-end.
